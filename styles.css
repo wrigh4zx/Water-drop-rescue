@@ -179,7 +179,7 @@ body.time-warning-global #global-warning-timer {
 
 .score-panel {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 12px;
     align-items: center;
     width: 100%;
@@ -191,7 +191,9 @@ body.time-warning-global #global-warning-timer {
 }
 
 .score,
-.timer {
+.timer,
+.mode,
+.difficulty {
     padding: 12px 14px;
     border-radius: 16px;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(239, 250, 255, 0.9));
@@ -206,7 +208,39 @@ body.time-warning-global #global-warning-timer {
     cursor: pointer;
 }
 
+.mode {
+    cursor: pointer;
+}
+
+.difficulty {
+    cursor: pointer;
+}
+
 #duration-select {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    border: none;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+#difficulty-select {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    border: none;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+#mode-select {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -223,12 +257,72 @@ body.time-warning-global #global-warning-timer {
     cursor: default;
 }
 
+#difficulty-select:disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+#mode-select:disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
 .score span {
     color: var(--green);
 }
 
 .timer span {
     color: var(--orange);
+}
+
+.mode span {
+    color: var(--ink);
+}
+
+.difficulty span {
+    color: var(--blue);
+}
+
+.goal-panel {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+}
+
+.hud-mode,
+.goal,
+.remaining,
+.active-difficulty,
+.hud-high-score {
+    padding: 10px 12px;
+    border-radius: 14px;
+    font-size: clamp(0.95rem, 2.1vw, 1.15rem);
+    font-weight: 800;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 7px 18px rgba(23, 50, 77, 0.1);
+}
+
+.hud-mode span {
+    color: var(--ink);
+}
+
+.goal span {
+    color: var(--green);
+}
+
+.remaining span {
+    color: var(--orange);
+}
+
+.active-difficulty span {
+    color: var(--blue);
+}
+
+.hud-high-score span {
+    color: var(--green);
 }
 
 .timer.low-time {
@@ -273,6 +367,24 @@ body.time-warning-global #global-warning-timer {
     color: rgba(23, 50, 77, 0.68);
     font-size: 0.94rem;
     text-align: center;
+}
+
+.controls-hint-desktop {
+    display: block;
+}
+
+.controls-hint-mobile {
+    display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .controls-hint-desktop {
+        display: none;
+    }
+
+    .controls-hint-mobile {
+        display: block;
+    }
 }
 
 #game-container {
@@ -433,6 +545,37 @@ body.time-warning-global #global-warning-timer {
     font-weight: 800;
 }
 
+.modal-mode-line,
+.goal-score-line,
+.time-limit-line,
+.high-score-line,
+.modal-difficulty-line {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: rgba(23, 50, 77, 0.82);
+    margin-bottom: 10px;
+}
+
+.modal-mode-line span {
+    color: var(--ink);
+}
+
+.goal-score-line span {
+    color: var(--orange);
+}
+
+.time-limit-line span {
+    color: var(--ink);
+}
+
+.high-score-line span {
+    color: var(--green);
+}
+
+.modal-difficulty-line span {
+    color: var(--blue);
+}
+
 .game-message {
     font-size: 1.02rem;
     color: rgba(23, 50, 77, 0.76);
@@ -519,6 +662,10 @@ body.time-warning-global #global-warning-timer {
     }
 
     .score-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .goal-panel {
         grid-template-columns: 1fr;
     }
 

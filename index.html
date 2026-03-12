@@ -17,7 +17,6 @@
             <div class="timer" title="Click to change duration">
                 Time: <span id="time">30</span>s
                 <select id="duration-select" aria-label="Game duration">
-                    <option value="15">15 seconds</option>
                     <option value="30" selected>30 seconds</option>
                     <option value="45">45 seconds</option>
                     <option value="60">60 seconds</option>
@@ -25,9 +24,26 @@
                     <option value="90">90 seconds</option>
                 </select>
             </div>
+            <div class="mode" title="Click to change game mode">
+                Mode: <span id="mode-label">Objective</span>
+                <select id="mode-select" aria-label="Game mode">
+                    <option value="objective" selected>Objective</option>
+                    <option value="freeplay">Freeplay</option>
+                </select>
+            </div>
+            <div id="difficulty-control" class="difficulty" title="Click to change difficulty">
+                Difficulty: <span id="difficulty-label">Easy</span>
+                <select id="difficulty-select" aria-label="Game difficulty">
+                    <option value="easy" selected>Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
             <button id="start-btn" type="button">Start Rescue</button>
         </div>
-        <p class="controls-hint">Move with Arrow keys or A / D. On touch devices, drag or tap inside the game area.</p>
+
+        <p class="controls-hint controls-hint-desktop">Desktop Controls: Move with Arrow keys or A / D.</p>
+        <p class="controls-hint controls-hint-mobile">Mobile Controls: Drag or tap inside the game area.</p>
         
         <div id="game-container">
             <div id="bucket"></div>
@@ -36,9 +52,14 @@
         <!-- Game Over Modal -->
         <div id="game-over-modal" class="modal hidden">
             <div class="modal-content">
-                <h2>GAME OVER</h2>
+                <h2 id="modal-title">GAME OVER</h2>
+                <p class="modal-mode-line">Mode: <span id="final-mode">Objective</span></p>
                 <p class="final-score">Final Score: <span id="final-score">0</span></p>
-                <p class="game-message">You made a difference!</p>
+                <p id="goal-score-line" class="goal-score-line">Goal Score: <span id="goal-score">100</span></p>
+                <p class="time-limit-line">Time Limit: <span id="final-time-limit">30s</span></p>
+                <p id="high-score-line" class="high-score-line">High Score: <span id="high-score">0</span></p>
+                <p id="modal-difficulty-line" class="modal-difficulty-line">Difficulty: <span id="final-difficulty">Easy</span></p>
+                <p class="game-message" id="game-message">You made a difference!</p>
                 <button id="play-again-btn" type="button">PLAY AGAIN</button>
             </div>
         </div>
