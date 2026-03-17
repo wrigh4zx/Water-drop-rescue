@@ -40,6 +40,7 @@
                 </select>
             </div>
             <button id="start-btn" type="button">Start Rescue</button>
+            <button id="reset-btn" type="button" disabled>Reset</button>
         </div>
 
         <p class="controls-hint controls-hint-desktop">Desktop Controls: Move with Arrow keys or A / D.</p>
@@ -60,12 +61,13 @@
                 <p id="high-score-line" class="high-score-line">High Score: <span id="high-score">0</span></p>
                 <p id="modal-difficulty-line" class="modal-difficulty-line">Difficulty: <span id="final-difficulty">Easy</span></p>
                 <p class="game-message" id="game-message">You made a difference!</p>
-                <button id="play-again-btn" type="button">PLAY AGAIN</button>
+                <button id="play-again-btn" type="button">BACK TO MENU</button>
             </div>
         </div>
     </div>
 
     <div id="global-warning-timer" aria-hidden="true">30</div>
+    <div id="confetti-layer" aria-hidden="true"></div>
     
     <script src="script.js"></script>
 </body>

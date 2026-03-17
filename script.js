@@ -40,6 +40,7 @@ let gameActive = false;
 let dropMaker;
 let timerInterval;
 let flashTimeout;
+let confettiCleanupTimeout;
 let timeLeft = 30;
 let currentScore = 0;
 let highScore = 0;
@@ -77,6 +78,7 @@ const goalDisplay = document.getElementById("goal");
 const remainingDisplay = document.getElementById("remaining");
 const hudHighScoreDisplay = document.getElementById("hud-high-score");
 const startBtn = document.getElementById("start-btn");
+const resetBtn = document.getElementById("reset-btn");
 const gameOverModal = document.getElementById("game-over-modal");
 const modalTitle = document.getElementById("modal-title");
 const gameMessage = document.getElementById("game-message");
@@ -90,6 +92,7 @@ const finalTimeLimitDisplay = document.getElementById("final-time-limit");
 const modalDifficultyLine = document.getElementById("modal-difficulty-line");
 const finalDifficultyDisplay = document.getElementById("final-difficulty");
 const playAgainBtn = document.getElementById("play-again-btn");
+const confettiLayer = document.getElementById("confetti-layer");
 
 function getSelectedDuration() {
   return Number(durationSelect.value);
@@ -226,7 +229,8 @@ function updateHighScoreIfNeeded() {
 }
 
 startBtn.addEventListener("click", startGame);
-playAgainBtn.addEventListener("click", resetGame);
+resetBtn.addEventListener("click", resetGame);
+playAgainBtn.addEventListener("click", returnToMenu);
 durationSelect.addEventListener("change", () => {
   if (!gameRunning) {
     selectedTimeLimit = getSelectedDuration();
@@ -278,8 +282,20 @@ function startGame() {
 }
 
 function resetGame() {
+  if (!gameRunning) {
+    return;
+  }
+
   stopGame();
   startGame();
+}
+
+function returnToMenu() {
+  resetBoard();
+  durationSelect.disabled = false;
+  modeSelect.disabled = false;
+  applyModeSelectionRules();
+  setStartButtonState(false);
 }
 
 function stopGame() {
@@ -299,6 +315,7 @@ function resetBoard() {
   clearDrops();
   clearFeedback();
   clearDangerFlash();
+  clearConfetti();
   currentScore = 0;
   timeLeft = selectedTimeLimit;
   gameOverModal.classList.add("hidden");
@@ -319,7 +336,7 @@ function updateEndModal(result) {
       ? "Amazing work! You reached the objective goal."
       : "Time ran out before reaching the goal.")
     : "Timer ended. Great run!";
-  playAgainBtn.textContent = "PLAY AGAIN";
+  playAgainBtn.textContent = "BACK TO MENU";
   finalModeDisplay.textContent = getModeLabel(currentGameMode);
   finalScoreDisplay.textContent = String(currentScore);
   goalScoreLine.style.display = isObjective ? "" : "none";
@@ -339,6 +356,10 @@ function updateEndModal(result) {
 function endGame(result) {
   if (!gameActive) {
     return;
+  }
+
+  if (result === "win") {
+    launchConfetti();
   }
 
   updateHighScoreIfNeeded();
@@ -547,9 +568,58 @@ function clearDangerFlash() {
   gameContainer.classList.remove("danger-flash");
 }
 
+function clearConfetti() {
+  clearTimeout(confettiCleanupTimeout);
+  confettiCleanupTimeout = undefined;
+
+  if (!confettiLayer) {
+    return;
+  }
+
+  confettiLayer.innerHTML = "";
+}
+
+function launchConfetti() {
+  if (!confettiLayer) {
+    return;
+  }
+
+  clearConfetti();
+
+  const colors = ["#ffc907", "#2e9df7", "#4fcb53", "#ff902a", "#f5402c", "#8bd1cb"];
+  const pieceCount = 110;
+
+  for (let index = 0; index < pieceCount; index += 1) {
+    const piece = document.createElement("div");
+    const size = Math.random() * 8 + 6;
+    const drift = (Math.random() - 0.5) * 260;
+    const spin = (Math.random() - 0.5) * 900;
+    const duration = (1.8 + Math.random() * 1.5).toFixed(2);
+
+    piece.className = "confetti-piece";
+    piece.style.left = `${Math.random() * 100}%`;
+    piece.style.width = `${size}px`;
+    piece.style.height = `${size * 0.52}px`;
+    piece.style.opacity = String(0.72 + Math.random() * 0.28);
+    piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = `${(Math.random() * 0.24).toFixed(2)}s`;
+    piece.style.setProperty("--confetti-drift", `${drift.toFixed(1)}px`);
+    piece.style.setProperty("--confetti-rotate", `${spin.toFixed(1)}deg`);
+    piece.style.setProperty("--confetti-duration", `${duration}s`);
+
+    confettiLayer.appendChild(piece);
+  }
+
+  confettiCleanupTimeout = setTimeout(clearConfetti, 3800);
+}
+
 function setStartButtonState(isRunning) {
   startBtn.disabled = isRunning;
   startBtn.textContent = isRunning ? "Rescue Active" : "Start Rescue";
+
+  if (resetBtn) {
+    resetBtn.disabled = !isRunning;
+  }
 }
 
 function clamp(value, min, max) {
